@@ -28,10 +28,10 @@ function runAnalysis() {
   // Range of 1-14 k values i supplied to check ideal accuracy
   _.range(1, 20).forEach(k => {
     const accuracy = _.chain(testSet)
-                        .filter(testPoint => knn(trainingSet, testPoint[0], k) === testPoint[3])
+                        .filter(testPoint => knn(trainingSet, _.initial(testPoint[0]), k) === testPoint[3])
                         .size()
                         .divide(testSetSize)
-                        .value();    
+                        .value();
                         
     console.log("For k of ", k, ', accuracy is: ', accuracy);
   });
@@ -41,7 +41,13 @@ function runAnalysis() {
 // KNN algo implementation
 function knn(data, point, k) {
   return _.chain(data)                
-            .map(row => [distance(row[0], point), row[3]]) // [ [ 290, 1 ], [ 100, 4 ], [ 50, 4 ], [ 300, 5 ] ]
+            .map(row => {
+              return [
+                  // Eg. to demo: row = [235, 0.53, 16, 2]
+                distance(_.initial(row), point),    // initial(row) = [235, 0.53, 16]
+                _.last(row) //  last(row) = 2
+              ];
+            }) // [ [ 290, 1 ], [ 100, 4 ], [ 50, 4 ], [ 300, 5 ] ]
             .sortBy(row => row[0])  //  [ [ 50, 4 ], [ 100, 4 ], [ 290, 1 ], [ 300, 5 ] ]
             .slice(0, k)    //  [ [ 50, 4 ], [ 100, 4 ], [ 290, 1 ] ]
             .countBy(row => row[1]) //  { '1': 1, '4': 2 }
@@ -55,7 +61,12 @@ function knn(data, point, k) {
 
 // Get distance from prediction point
 function distance(pointA, pointB) {
-  return Math.abs(pointA - pointB);
+  // Use Pythagorean theorem to get distance from the overall features
+  return _.chain(pointA)  //  Use array for point A
+            .zip(pointB)  //  Convert point A and point B arrays by taking their values in columns
+            .map(pair => (pair[0] - pair[1]) ** 2)  //  Take every pair then use Pythagorean theorem (a^2 - b^2)
+            .sum()
+            .value() ** 0.5;  //  Transpose square from c to the sum
 }
 
 // Split data for test and training set
