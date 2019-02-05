@@ -13,16 +13,25 @@ function runAnalysis() {
   // For accuracy testing
   const [testSet, trainingSet] = splitData(outputs, testSetSize);
 
-  let numberCorrect = 0;
-  for(let i=0; i < testSet.length; i++) {
-    const bucket = knn(trainingSet, testSet[i][0]);
-    // console.log("Bucket", bucket, testSet[i][3]);
-    if(bucket === testSet[i][3]) {
-      numberCorrect++;
-    }
-  }
+  // let numberCorrect = 0;
+  // for(let i=0; i < testSet.length; i++) {
+  //   const bucket = knn(trainingSet, testSet[i][0]);
+  //   // console.log("Bucket", bucket, testSet[i][3]);
+  //   if(bucket === testSet[i][3]) {
+  //     numberCorrect++;
+  //   }
+  // }
 
-  console.log('Accuracy: ', numberCorrect / testSetSize);
+  // console.log('Accuracy: ', numberCorrect / testSetSize);
+
+  // Simplified Lodash methods instead of commented code above
+  const accuracy = _.chain(testSet)
+                      .filter(testPoint => knn(trainingSet, testPoint[0]) === testPoint[3])
+                      .size()
+                      .divide(testSetSize)
+                      .value();
+
+  console.log('Accuracy: ', accuracy);
 }
 
 // KNN algo implementation
