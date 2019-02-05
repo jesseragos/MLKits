@@ -1,6 +1,6 @@
 const outputs = [];
 // const predictionPoint = 300;
-// const k = 3;    // k variable
+const k = 10;    // k variable
 const testSetSize = 100; //  10 random separate points
 
 function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
@@ -11,7 +11,6 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
   // For accuracy testing
-  const [testSet, trainingSet] = splitData(minMax(outputs, 3), testSetSize);
 
   // let numberCorrect = 0;
   // for(let i=0; i < testSet.length; i++) {
@@ -25,15 +24,21 @@ function runAnalysis() {
   // console.log('Accuracy: ', numberCorrect / testSetSize);
 
   // Simplified Lodash methods instead of commented code above
-  // Range of 1-14 k values i supplied to check ideal accuracy
-  _.range(1, 20).forEach(k => {
+  // Range of features from data array to check which produces much better accuracy
+  _.range(0, 3).forEach(feature => {
+    const data = _.map(outputs, row => [row[feature], _.last(row)]);  //  Get data for a feature 
+    const [testSet, trainingSet] = splitData(minMax(data, 1), testSetSize);
+
     const accuracy = _.chain(testSet)
-                        .filter(testPoint => knn(trainingSet, _.initial(testPoint[0]), k) === testPoint[3])
+                        .filter(
+                          testPoint => 
+                            knn(trainingSet, _.initial(testPoint), k) === _.last(testPoint)
+                          )
                         .size()
                         .divide(testSetSize)
                         .value();
                         
-    console.log("For k of ", k, ', accuracy is: ', accuracy);
+    console.log("For feature of", k, ', accuracy is:', accuracy);
   });
 
 }
