@@ -1,7 +1,7 @@
 const outputs = [];
-const predictionPoint = 300;
-const k = 3;    // k variable
-const testSetSize = 10; //  10 random separate points
+// const predictionPoint = 300;
+// const k = 3;    // k variable
+const testSetSize = 100; //  10 random separate points
 
 function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
   // Ran every time a balls drops into a bucket
@@ -25,17 +25,21 @@ function runAnalysis() {
   // console.log('Accuracy: ', numberCorrect / testSetSize);
 
   // Simplified Lodash methods instead of commented code above
-  const accuracy = _.chain(testSet)
-                      .filter(testPoint => knn(trainingSet, testPoint[0]) === testPoint[3])
-                      .size()
-                      .divide(testSetSize)
-                      .value();
+  // Range of 1-14 k values i supplied to check ideal accuracy
+  _.range(1, 20).forEach(k => {
+    const accuracy = _.chain(testSet)
+                        .filter(testPoint => knn(trainingSet, testPoint[0], k) === testPoint[3])
+                        .size()
+                        .divide(testSetSize)
+                        .value();    
+                        
+    console.log("For k of ", k, ', accuracy is: ', accuracy);
+  });
 
-  console.log('Accuracy: ', accuracy);
 }
 
 // KNN algo implementation
-function knn(data, point) {
+function knn(data, point, k) {
   return _.chain(data)                
             .map(row => [distance(row[0], point), row[3]]) // [ [ 290, 1 ], [ 100, 4 ], [ 50, 4 ], [ 300, 5 ] ]
             .sortBy(row => row[0])  //  [ [ 50, 4 ], [ 100, 4 ], [ 290, 1 ], [ 300, 5 ] ]
