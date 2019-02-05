@@ -11,7 +11,7 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
   // For accuracy testing
-  const [testSet, trainingSet] = splitData(outputs, testSetSize);
+  const [testSet, trainingSet] = splitData(minMax(outputs, 3), testSetSize);
 
   // let numberCorrect = 0;
   // for(let i=0; i < testSet.length; i++) {
@@ -79,4 +79,25 @@ function splitData(data, testCount) {
   const trainingSet = _.slice(shuffled, testCount);
 
   return [testSet, trainingSet];
+}
+
+// Get normalized data
+function minMax(data, featureCount) {
+  const clonedData = _.cloneDeep(data);
+
+  // Iterate each column of data
+  for(let i = 0; i < featureCount; i++) {
+    const column = clonedData.map(row => row[i]);
+
+    const min = _.min(column);
+    const max = _.max(column);
+    
+    // Iterate each row
+    for(let j = 0; j < clonedData.length; j++) {
+      // Formula for Normalization for value of feature
+      clonedData[j][i] = (clonedData[j][i] - min) / (max - min);
+    }
+  }
+
+  return clonedData;
 }
