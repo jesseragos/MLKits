@@ -1,3 +1,5 @@
 plinko_analysis
 .DS_Store
 node_modules
+plinko/Scratch/package.json
+plinko/Scratch/package-lock.json
