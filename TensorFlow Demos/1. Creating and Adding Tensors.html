@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.2/dist/tf.min.js"></script>
+    <script>
+        // Tensors are just collection of nos. in a structured array
+        // Below tensor consists of 2 dimensions
+        // Its 'shape' would be [1,3] as 1st dim is 1 and 2nd is 3
+        const data = tf.tensor(
+            [
+                [1,2,3]
+            ]
+        );
+
+        // You can add tensors that results in mapping them in addition
+        const data1 = tf.tensor([1,2,3]);
+        const data2 = tf.tensor([4,5,6]);
+
+        console.log(data.shape);    // [1,3]
+        // Basic math operators
+        data1.add(data2).print();    // [5,7,9]
+        data1.sub(data2).print();    
+        data1.mul(data2).print();    
+        data1.div(data2).print();    
+
+    /* 
+        NOTE: Unequal shape of tensors are not applicable for math operations 
+        eg.
+            [1,2],
+            [4]     NOT ALLOWED
+        
+        Also tensor shape values that are not logical for an operation is not applicable
+        eg.
+            [2,3],
+            [2,1]     1 towards 3 is ALLOWED
+
+            [2,3],
+            [2,2]     2 or > towards 3 is NOT ALLOWED
+    */
+
+        const data3 = tf.tensor([4]);
+
+        // Below is applicable due to broadcasting by depending on their shape from right to left
+        data1.add(data3).print();    // [5,6,7]
+
+        // Shape [2,3]
+        const data4 = tf.tensor(
+            [
+                [1,2,3],
+                [4,5,6]
+            ]
+        );
+
+        // Shape [2,1]
+        const data5 = tf.tensor(
+            [
+                [1],
+                [2]
+            ]
+        );
+
+        data4.add(data5).print();
+
+        // Shape [2,3,2]
+        const data6 = tf.tensor(
+            [
+                [1,2,3],
+                [4,5,6]
+            ]
+            /* [
+                [7,8,9],
+                [10,11,12]
+            ] */
+        );
+
+        data5.add(data6).print();
+
+    </script>
+</head>
+<body>
+    TensorFlow basics and demo 
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.2/dist/tf.min.js"></script>
+    <script>        
+        const data = tf.tensor(
+            [
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+                [10,11,12],
+            ]
+        );
+
+        // Get a number from a tensor 
+        console.log(data.get(1, 1))   // 5
+
+        // Slice values from a tensor
+        // 1st param: Array where extracts row and col
+        // 2nd param: Array where extracts size and element wide
+        var slicedData = data.slice([0, 1], [4, 1])
+        slicedData.print();
+
+        // -1 gives all the record size
+        var slicedData = data.slice([0, 2], [-1, 1])
+        slicedData.print();
+
+        // Concatenate tensors
+        const data1 = tf.tensor(
+            [
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+                [10,11,12],
+            ]
+        );
+
+        const concatenatedData = data.concat(data1)
+
+        console.log(concatenatedData.shape)   // 5
+
+    </script>
+</head>
+<body>
+    TensorFlow basics and demo 
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.2/dist/tf.min.js"></script>
+    <script>        
+        // Axis determines where operations would direct 
+        const jumpData = tf.tensor([
+            [70, 70, 70],   //  ^
+            [70, 70, 70],   //  Axis 0
+            [70, 70, 70],    //  v
+            [70, 70, 70]
+        //  <   Axis 1   >
+        ])
+
+        const playerData = tf.tensor([
+            [1, 160],
+            [1, 160],
+            [1, 160],
+            [1, 160]
+        ])
+
+        // Get sum towards axis 1 and set true to preserve dimension shape
+        // Then concat on specific col of playerData
+        jumpData.sum(1, true).concat(playerData, 1);
+        // same as code below
+        // jumpData.expandDims(1).concat(playerData, 1);
+        // Above expands dims to towards axis 1
+        // same as sum() but no need for the 2nd arg
+
+    </script>
+</head>
+<body>
+    TensorFlow basics and demo 
+</body>
+</html>
